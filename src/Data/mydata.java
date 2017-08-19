@@ -8,14 +8,36 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Random;
+import com.HelloWorldPushlet.HsPlushlet;;
+
 public class mydata extends HttpServlet {
 
 	/**
 	 * Constructor of the object.
+	 * 
+	 * 
 	 */
+	
+	
+	public getData get;
+	public String preData="";
+	public String nowData="";
 	public mydata() {
+		
 		super();
+		get =new getData();
+		get.start();
+		try{
+			Thread.sleep(5000);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+	
 	}
+	
+	public String jsondata;
 
 	/**
 	 * Destruction of the servlet. <br>
@@ -75,16 +97,25 @@ public class mydata extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		System.out.println("ok");
+		
 
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
+	
+		
+		nowData=get.data;
+		
+		if(preData==""||nowData!=preData)
+		{
+			preData=nowData;
+			out.write(nowData);
 
-		String jsonstr = "{\"name\":\"chenyongkang\",\"sex\":\"boy\"}";
-		out.write(jsonstr);
-
-		out.flush();
-		out.close();
+			out.flush();
+			out.close();
+		}
+		
+		
+		
 	}
 
 	/**
@@ -97,4 +128,51 @@ public class mydata extends HttpServlet {
 		// Put your code here
 	}
 
+}
+
+class getData extends Thread{
+	
+	
+	public HsPlushlet hs = new HsPlushlet();
+
+	public getData(){
+	
+	}
+	String data;
+	
+	Random ran = new Random();
+	private static String string = "abcdefghijklmnopqrstuvwxyz"; 
+	
+	public void run(){
+		
+		while(true){
+			
+			try{
+				int time=ran.nextInt(5000)%(2000)+3000;
+				String name="";
+				String sex="";
+				int len=string.length();
+				for(int i=0;i<4;i++)
+					name+=string.charAt(ran.nextInt(len-1));
+				
+				for(int i=0;i<2;i++)
+					sex=(ran.nextInt(2)==0?"boy":"girl");
+					
+				
+				data="{\"name\":\""+name+"\",\"sex\":\""+sex+"\"}";
+				
+				Thread.sleep(time);
+				
+				hs.pullEvent(data);
+				
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+	}
+	
 }
