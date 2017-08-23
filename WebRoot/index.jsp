@@ -74,6 +74,51 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 		
 	</script>
+	<script type="text/javascript">
+	
+	function conn3(){
+
+		
+		$.ajax({
+			
+			url:'mydata3',
+			dataType:'json',
+			method:'post',
+			success:function(data){
+				
+				alert(data.name+data.sex);
+			},
+			
+			
+		
+		});
+	}
+	
+	</script>
+	
+		<script type="text/javascript">
+	
+	function conn4(){
+	
+		PL._init();
+		
+		
+		
+		PL.joinListen('/suige/he');
+		}
+	
+		
+		function onData(event){ 
+		
+		var data =JSON.parse(event.get("mess"));
+		
+		$("#hi4").append("姓名："+data.name+"性别："+data.sex);
+		}
+		
+		
+		
+	
+	</script>
 	
   </head>
   
@@ -84,9 +129,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="jumbotron" id="hi">
     </div>
     
-    <p class="navbar-text">长连接</p>
+    <p class="navbar-text">pushlet框架长连接</p>
   	<button type="button" class="btn btn-default navbar-btn" onclick="conn2()">测试</button>
     <div class="jumbotron" id="hi2">
+    </div>
+    
+     <p class="navbar-text">一般http请求测试</p>
+  	<button type="button" class="btn btn-default navbar-btn" onclick="conn3()">测试</button>
+    <div class="jumbotron" id="hi3">
+    </div>
+    
+      <p class="navbar-text">数据源提供测试</p>
+  	<button type="button" class="btn btn-default navbar-btn" onclick="conn4()">测试</button>
+    <div class="jumbotron" id="hi4">
     </div>
   </body>
 </html>

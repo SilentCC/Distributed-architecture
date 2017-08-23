@@ -1,15 +1,23 @@
 package Data;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Socket;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
 import java.util.Random;
-import com.HelloWorldPushlet.HsPlushlet;;
+import server.getdata;
+import com.HelloWorldPushlet.HsPlushlet;
+import org.json.JSONObject;
+
 
 public class mydata extends HttpServlet {
 
@@ -23,11 +31,15 @@ public class mydata extends HttpServlet {
 	public getData get;
 	public String preData="";
 	public String nowData="";
+	public acceptData act;
 	public mydata() {
 		
 		super();
 		get =new getData();
-		get.start();
+		//get.start();
+		
+		act =new acceptData();
+		act.start();
 		try{
 			Thread.sleep(5000);
 			}
@@ -176,3 +188,45 @@ class getData extends Thread{
 	}
 	
 }
+
+class acceptData extends Thread{
+	
+	public  HsPlushlet  h = new HsPlushlet();
+	public void run()
+	{
+try{
+			
+			 
+
+			
+			Socket socket =new Socket("192.168.43.229",2007);
+			System.out.println("客户端链接成功");
+			
+			while(true){
+			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			if(reader.ready()){
+				
+				System.out.println("我已经接受了数据");
+				String mess= reader.readLine();
+				JSONObject js = new JSONObject(mess);  
+				
+			    System.out.println("姓名:"+js.get("name"));  
+			    System.out.println("性别："+js.get("sex"));  
+			    
+
+				h.pullEvent(mess);
+			}
+			Thread.sleep(1000);
+			}
+			
+		}
+		catch(Exception e){
+			
+			e.printStackTrace();
+		}
+		
+	}
+	}
+		
+	
